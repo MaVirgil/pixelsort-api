@@ -15,7 +15,6 @@ import java.io.IOException;
 public class PixelsortService {
 
     private ImageConverter imageConverter;
-    private ImageTransformer imageTransformer;
 
     private PixelSorter pixelSorter;
 

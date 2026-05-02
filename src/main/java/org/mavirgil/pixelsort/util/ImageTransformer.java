@@ -2,8 +2,6 @@ package org.mavirgil.pixelsort.util;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
 @Component
 public class ImageTransformer {
 

@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum SortOrder {
     ASCENDING,
-    DESCENDING;
+    DESCENDING
 }
