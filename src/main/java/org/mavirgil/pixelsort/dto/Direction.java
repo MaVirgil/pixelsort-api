@@ -1,11 +1,17 @@
 package org.mavirgil.pixelsort.dto;
 
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 public enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+    UP ("up"),
+    DOWN ("down"),
+    LEFT ("left"),
+    RIGHT ("right");
+
+    final String value;
+
+    Direction(String value) {
+        this.value = value;
+    }
 }
+
+

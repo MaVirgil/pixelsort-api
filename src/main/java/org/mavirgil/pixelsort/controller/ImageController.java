@@ -3,7 +3,9 @@ package org.mavirgil.pixelsort.controller;
 import lombok.AllArgsConstructor;
 import org.mavirgil.pixelsort.config.ApiPath;
 import org.mavirgil.pixelsort.dto.Direction;
+import org.mavirgil.pixelsort.dto.PixelsortOptions;
 import org.mavirgil.pixelsort.service.PixelsortService;
+import org.springframework.boot.jackson.autoconfigure.JacksonProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,11 @@ public class ImageController {
     private PixelsortService pixelsortService;
 
     @PostMapping("/sort")
-    public ResponseEntity<byte[]> pixelsortImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<byte[]> pixelsortImage(@RequestParam("file") MultipartFile file,
+                                                 @RequestParam(defaultValue = "40") Integer lowerThreshold,
+                                                 @RequestParam(defaultValue = "210") Integer upperThreshold,
+                                                 @RequestParam(defaultValue = "RIGHT") Direction direction
+    ) {
 
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -35,9 +41,11 @@ public class ImageController {
             return ResponseEntity.badRequest().build();
         }
 
-        System.out.println(Direction.UP);
+        PixelsortOptions options = new PixelsortOptions(direction, lowerThreshold, upperThreshold);
 
-        byte[] result = pixelsortService.process(file);
+        System.out.println("options: " + options);
+
+        byte[] result = pixelsortService.process(file, options);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)

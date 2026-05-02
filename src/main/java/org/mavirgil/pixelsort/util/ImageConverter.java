@@ -41,7 +41,7 @@ public class ImageConverter {
         return bufferedImageToByteArray(image);
     }
 
-    private BufferedImage byteArrayToBufferedImage(byte[] bytes) {
+    public BufferedImage byteArrayToBufferedImage(byte[] bytes) {
 
         BufferedImage image;
 
@@ -56,7 +56,7 @@ public class ImageConverter {
         }
     }
 
-    private byte[] bufferedImageToByteArray(BufferedImage image) {
+    public byte[] bufferedImageToByteArray(BufferedImage image) {
 
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -1,12 +1,14 @@
 package org.mavirgil.pixelsort.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class PixelsortOptions {
     private Direction direction;
-    private Integer thresholdMin;
-    private Integer thresholdMax;
+    private Integer lowerThreshold;
+    private Integer upperThreshold;
 }
