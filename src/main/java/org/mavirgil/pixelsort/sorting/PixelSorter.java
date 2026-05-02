@@ -1,6 +1,7 @@
 package org.mavirgil.pixelsort.sorting;
 
 import lombok.AllArgsConstructor;
+import org.mavirgil.pixelsort.util.ImageConverter;
 import org.mavirgil.pixelsort.util.ImageTransformer;
 import org.mavirgil.pixelsort.util.RgbTools;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PixelSorter {
 
-    private final RgbTools rgbTools;
+    private final ImageConverter imageConverter;
     private final ImageTransformer imageTransformer;
 
     private static final int WHITE_ARGB = 0xFFFFFFFF;
@@ -119,10 +120,10 @@ public class PixelSorter {
             for (int j = 0; j < mask[i].length; j++) {
 
                 //convert pixel to RGB array
-                int[] rgb = rgbTools.colorToRgb(imageArray[i][j]);
+                int[] rgb = imageConverter.colorToRgb(imageArray[i][j]);
 
                 //calculate perceived luminance of RGB array
-                double luminance = rgbTools.rgbToLuminance(rgb);
+                double luminance = imageConverter.rgbToLuminance(rgb);
 
                 //mask out dark/bright spots
                 if (luminance <= upperThreshold && luminance >= lowerThreshold){
@@ -134,8 +135,8 @@ public class PixelSorter {
     }
 
     private KeyedPixel toKeyedPixel(int pixelValue) {
-        int[] rgbData = rgbTools.colorToRgb(pixelValue);
-        return new KeyedPixel(pixelValue, rgbTools.rgbToLuminance(rgbData));
+        int[] rgbData = imageConverter.colorToRgb(pixelValue);
+        return new KeyedPixel(pixelValue, imageConverter.rgbToLuminance(rgbData));
     }
 
     private void processSegment(

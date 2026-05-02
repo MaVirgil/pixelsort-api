@@ -3,6 +3,7 @@ package org.mavirgil.pixelsort.util;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -69,6 +70,15 @@ public class ImageConverter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int[] colorToRgb(int pixel){
+        Color color = new Color (pixel, false);
+        return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
+    }
+
+    public double rgbToLuminance(int[] pixel){
+        return (0.2126 * pixel[0]) + (0.7152 * pixel[1]) + (0.0722 * pixel[2]);
     }
 
 }
