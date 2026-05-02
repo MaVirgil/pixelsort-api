@@ -41,8 +41,8 @@ public class PixelSorter {
 
     private int[][] sort(int[][] imageData, int lowerThreshold, int upperThreshold, int minSegmentLength, SortOrder sortOrder) {
 
-        if (minSegmentLength < 2 || minSegmentLength > imageData[0].length) {
-            throw new IllegalArgumentException("minSegmentLength must be equal to or above 2 and below or equal to width of imageData");
+        if (minSegmentLength < 1 || minSegmentLength > imageData[0].length) {
+            throw new IllegalArgumentException("minSegmentLength must be equal to or above 1 and below or equal to width of imageData");
         }
 
         Comparator<KeyedPixel> comparator = Comparator.comparingDouble(KeyedPixel::sortKey);
