@@ -22,13 +22,14 @@ public class ImageController {
     private final PixelsortService pixelsortService;
 
     @PostMapping("/sort")
-    public ResponseEntity<byte[]> pixelsortImage(@RequestParam("file") MultipartFile file,
-                                                 @RequestParam(defaultValue = "40") int lowerThreshold,
-                                                 @RequestParam(defaultValue = "210") int upperThreshold,
-                                                 @RequestParam(defaultValue = "5") int minSegmentLength,
-                                                 @RequestParam(defaultValue = "HORIZONTAL") SortOrientation sortOrientation,
-                                                 @RequestParam(defaultValue = "ASCENDING") SortOrder sortOrder
-                                                 ) {
+    public ResponseEntity<byte[]> pixelsortImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(defaultValue = "40") int lowerThreshold,
+            @RequestParam(defaultValue = "210") int upperThreshold,
+            @RequestParam(defaultValue = "5") int minSegmentLength,
+            @RequestParam(defaultValue = "HORIZONTAL") SortOrientation sortOrientation,
+            @RequestParam(defaultValue = "ASCENDING") SortOrder sortOrder
+    ) {
 
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().build();
