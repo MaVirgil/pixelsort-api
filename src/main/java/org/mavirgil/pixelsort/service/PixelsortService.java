@@ -1,9 +1,10 @@
 package org.mavirgil.pixelsort.service;
 
 import lombok.AllArgsConstructor;
-import org.mavirgil.pixelsort.dto.PixelsortOptions;
-import org.mavirgil.pixelsort.pixelsort.PixelSorter;
+import org.mavirgil.pixelsort.sorting.PixelsortOptions;
+import org.mavirgil.pixelsort.sorting.PixelSorter;
 import org.mavirgil.pixelsort.util.ImageConverter;
+import org.mavirgil.pixelsort.util.ImageTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class PixelsortService {
 
     private ImageConverter imageConverter;
+    private ImageTransformer imageTransformer;
 
     private PixelSorter pixelSorter;
 
@@ -27,10 +29,9 @@ public class PixelsortService {
             throw new RuntimeException("Failed to read uploaded file", e);
         }
 
-        int lowerThreshold = options.getLowerThreshold();
-        int upperThreshold = options.getUpperThreshold();
+        int[][] imageData = imageConverter.byteArrayToRgbArray(byteArr);
 
-        int[][] sorted = pixelSorter.sort(imageConverter.byteArrayToRgbArray(byteArr), lowerThreshold, upperThreshold, 5);
+        int[][] sorted = pixelSorter.sort(imageData, options);
 
         return imageConverter.rgbArrayToByteArray(sorted);
     }

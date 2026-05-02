@@ -9,6 +9,8 @@ import java.io.*;
 @Component
 public class ImageConverter {
 
+
+
     public int[][] byteArrayToRgbArray(byte[] bytes) {
 
         BufferedImage image = byteArrayToBufferedImage(bytes);

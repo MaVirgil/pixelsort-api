@@ -1,6 +1,7 @@
-package org.mavirgil.pixelsort.pixelsort;
+package org.mavirgil.pixelsort.sorting;
 
 import lombok.AllArgsConstructor;
+import org.mavirgil.pixelsort.util.ImageTransformer;
 import org.mavirgil.pixelsort.util.RgbTools;
 import org.springframework.stereotype.Component;
 
@@ -13,34 +14,53 @@ import java.util.List;
 public class PixelSorter {
 
     private final RgbTools rgbTools;
+    private final ImageTransformer imageTransformer;
 
     private static final int WHITE_ARGB = 0xFFFFFFFF;
     private static final int BLACK_ARGB = 0xFF000000;
 
-    /**
-     *
-     * @param imageData the source image as a 2D array of RGB pixel values
-     * @param lowerThreshold the inclusive lower threshold for image mask, in the range {@code [0, 255]}
-     * @param upperThreshold the inclusive upper threshold for image mask, in the range {@code [0, 255]}
-     * @param minSortingLength the minimum amount of contiguous pixels that will be sorted, must be in the range {@code 2, imageData[0].length}
-     * @return a 2D array of RGB pixel values
-     */
-    public int[][] sort(int[][] imageData, int lowerThreshold, int upperThreshold, int minSortingLength) {
 
-        if (minSortingLength < 2 || minSortingLength > imageData[0].length) {
-            throw new IllegalArgumentException("minSortingLength must be above 2 and below or equal to width of imageData");
+
+    public int[][] sort(int[][] imageData, PixelsortOptions options) {
+
+        //unwrap options
+        SortOrientation sortOrientation = options.sortOrientation();
+        SortOrder sortOrder = options.sortOrder();
+        int lowerThreshold = options.lowerThreshold();
+        int upperThreshold = options.upperThreshold();
+        int minSegmentLength = options.minSegmentLength();
+
+        if (sortOrientation == SortOrientation.VERTICAL) {
+            imageData = imageTransformer.rotateCw(imageData);
+            imageData = sort(imageData, lowerThreshold, upperThreshold, minSegmentLength, sortOrder);
+            return imageTransformer.rotateCcw(imageData);
+        } else {
+            return sort(imageData, lowerThreshold, upperThreshold, minSegmentLength, sortOrder);
+        }
+    }
+
+    private int[][] sort(int[][] imageData, int lowerThreshold, int upperThreshold, int minSegmentLength, SortOrder sortOrder) {
+
+        if (minSegmentLength < 2 || minSegmentLength > imageData[0].length) {
+            throw new IllegalArgumentException("minSegmentLength must be equal to or above 2 and below or equal to width of imageData");
+        }
+
+        Comparator<KeyedPixel> comparator = Comparator.comparingDouble(KeyedPixel::sortKey);
+
+        if (sortOrder == SortOrder.DESCENDING) {
+            comparator = comparator.reversed();
         }
 
         int[][] mask = getMask(imageData, lowerThreshold, upperThreshold);
-        int[][] sortedImage = new int[imageData.length][imageData[0].length];
+        int[][] resultImageData = new int[imageData.length][imageData[0].length];
 
         //Loop through imageData and find series of pixels within mask
-        for (int i = 0; i < sortedImage.length; i++) {
+        for (int i = 0; i < resultImageData.length; i++) {
 
             List<KeyedPixel> pixelSegment = new ArrayList<>();
             int runStartingIndex = 0;
 
-            for (int j = 0; j < sortedImage[i].length; j++) {
+            for (int j = 0; j < resultImageData[i].length; j++) {
 
                 //if pixel is within mask, add it
                 if (mask[i][j] == WHITE_ARGB) {
@@ -55,16 +75,15 @@ public class PixelSorter {
                 }
 
                 //Sort segment if size is above or equal to minimum sorting
-                processSegment(pixelSegment, minSortingLength, sortedImage, i, runStartingIndex);
+                processSegment(pixelSegment, comparator, minSegmentLength, resultImageData, i, runStartingIndex);
 
-                sortedImage[i][j] = imageData[i][j];
+                resultImageData[i][j] = imageData[i][j];
                 pixelSegment.clear();
             }
 
-            processSegment(pixelSegment, minSortingLength, sortedImage, i, runStartingIndex);
+            processSegment(pixelSegment, comparator, minSegmentLength, resultImageData, i, runStartingIndex);
         }
-
-        return sortedImage;
+        return resultImageData;
     }
 
     /**
@@ -119,9 +138,16 @@ public class PixelSorter {
         return new KeyedPixel(pixelValue, rgbTools.rgbToLuminance(rgbData));
     }
 
-    private void processSegment(List<KeyedPixel> pixelSegment, int minSortingLength, int[][] sortedImage, int rowIndex, int runStartingIndex) {
+    private void processSegment(
+            List<KeyedPixel> pixelSegment,
+            Comparator<KeyedPixel> comparator,
+            int minSortingLength,
+            int[][] sortedImage,
+            int rowIndex,
+            int runStartingIndex
+    ) {
         if (pixelSegment.size() >= minSortingLength) {
-            pixelSegment.sort(Comparator.comparingDouble(KeyedPixel::sortKey));
+            pixelSegment.sort(comparator);
         }
 
         if (!pixelSegment.isEmpty()) {

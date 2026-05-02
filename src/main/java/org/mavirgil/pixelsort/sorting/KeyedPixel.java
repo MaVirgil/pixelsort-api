@@ -1,3 +1,3 @@
-package org.mavirgil.pixelsort.pixelsort;
+package org.mavirgil.pixelsort.sorting;
 
 public record KeyedPixel(int pixelValue, double sortKey) {}
