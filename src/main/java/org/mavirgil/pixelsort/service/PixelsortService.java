@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.mavirgil.pixelsort.sorting.PixelsortOptions;
 import org.mavirgil.pixelsort.sorting.PixelSorter;
 import org.mavirgil.pixelsort.util.ImageConverter;
-import org.mavirgil.pixelsort.util.ImageTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
