@@ -30,7 +30,7 @@ public class PixelsortService {
         int lowerThreshold = options.getLowerThreshold();
         int upperThreshold = options.getUpperThreshold();
 
-        int[][] sorted = pixelSorter.sort(imageConverter.byteArrayToRgbArray(byteArr), lowerThreshold, upperThreshold);
+        int[][] sorted = pixelSorter.sort(imageConverter.byteArrayToRgbArray(byteArr), lowerThreshold, upperThreshold, 5);
 
         return imageConverter.rgbArrayToByteArray(sorted);
     }
