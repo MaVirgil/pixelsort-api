@@ -3,7 +3,6 @@ package org.mavirgil.pixelsort.sorting;
 import lombok.AllArgsConstructor;
 import org.mavirgil.pixelsort.util.ImageConverter;
 import org.mavirgil.pixelsort.util.ImageTransformer;
-import org.mavirgil.pixelsort.util.RgbTools;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
