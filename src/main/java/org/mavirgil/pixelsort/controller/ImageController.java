@@ -26,21 +26,12 @@ public class ImageController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(defaultValue = "40") int lowerThreshold,
             @RequestParam(defaultValue = "210") int upperThreshold,
-            @RequestParam(defaultValue = "5") int minSegmentLength,
+            @RequestParam(defaultValue = "2") int minSegmentLength,
             @RequestParam(defaultValue = "HORIZONTAL") SortOrientation sortOrientation,
             @RequestParam(defaultValue = "ASCENDING") SortOrder sortOrder
     ) {
 
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        String originalFileName = file.getOriginalFilename();
-
-        if (originalFileName == null || !originalFileName
-                .toLowerCase(Locale.ROOT)
-                .matches(".*\\.(jpg|jpeg|png)$")
-        ) {
+        if (!isValidFile(file)) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -51,5 +42,18 @@ public class ImageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(result);
+    }
+
+    private boolean isValidFile(MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return false;
+        }
+
+        String originalFileName = file.getOriginalFilename();
+
+         return originalFileName == null || !originalFileName
+                .toLowerCase(Locale.ROOT)
+                .matches(".*\\.(jpg|jpeg|png)$");
     }
 }
