@@ -52,8 +52,8 @@ public class ImageController {
 
         String originalFileName = file.getOriginalFilename();
 
-         return originalFileName == null || !originalFileName
+         return !(originalFileName == null || !originalFileName
                 .toLowerCase(Locale.ROOT)
-                .matches(".*\\.(jpg|jpeg|png)$");
+                .matches(".*\\.(jpg|jpeg|png)$"));
     }
 }
